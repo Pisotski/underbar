@@ -204,10 +204,15 @@
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
     return _.reduce(collection, function(isMatch, item) {
-      if ( isMatch !== iterator(item)) {
+      if ( iterator === undefined ) {
+        iterator = function(item) {
+          return item === true;
+        }
+      }
+      if ( !(iterator(item))) {
         return false;
       }
-      return  isMatch;
+      return isMatch;
     }, true)
   };
 
