@@ -175,26 +175,16 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
 
-  //function reducer ( array ) {
-//   return array.reduce(function(acc, item){
-//     if (item.containsNuts) {
-//       acc.push(item.name);
-//     }
-//     return acc;
-//   },[]).join(', ');
-// }
-
   _.reduce = function(collection, iterator, accumulator) {
 
-    var collection2 = collection.slice();
-    if (accumulator === undefined) {
-      accumulator = collection[0];
-      collection2 = collection2.slice(1);
+   _.each(collection, function(item, index) {
+    if ( accumulator === undefined && index === 0 ) {
+      accumulator = item;
+    } else {
+      accumulator = iterator(accumulator, item);
     }
-    _.each(collection2, function(item) {
-      accumulator = iterator(accumulator, item)
-    })
-    return accumulator;
+  } );
+  return accumulator;   
   };
 
   // Determine if the array or object contains a given value (using `===`).
@@ -213,6 +203,12 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+    return _.reduce(collection, function(isMatch, item) {
+      if ( isMatch !== iterator(item)) {
+        return false;
+      }
+      return  isMatch;
+    }, true)
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
