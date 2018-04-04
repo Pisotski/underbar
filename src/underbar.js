@@ -328,7 +328,6 @@
         storage[key] = func.apply(null, arguments);
       }
       return storage[key];
-
     }; 
   };
 
@@ -359,6 +358,15 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+
+  var result = [];
+  var testArray = array.slice();
+  for ( var i = testArray.length; i > 0; i-- ) {
+    var rI = Math.floor(Math.random() * i);
+    result.push(testArray[rI]);
+    testArray = testArray.slice(0, rI).concat(testArray.slice(rI + 1));
+  }
+  return result;
   };
 
 
