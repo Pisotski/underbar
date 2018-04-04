@@ -219,6 +219,18 @@
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
+
+    return _.reduce(collection, function(isMatch, item) {
+      if ( iterator === undefined ) {
+        iterator = function(item) {
+          return item === true;
+        }
+      }
+      if ( iterator(item)) {
+        return true;
+      }
+      return isMatch;
+    }, false)      
     // TIP: There's a very clever way to re-use every() here.
   };
 
@@ -241,12 +253,30 @@
   //   }, {
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
+
   _.extend = function(obj) {
+
+  for (var i = 0; i < arguments.length; i++) {
+    for (var key in arguments[i]) {
+      obj[key] = arguments[i][key];
+    }
+  }
+  return obj;
   };
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+
+ 
+    for ( var i = 0; i < arguments.length; i++ ) {
+      for ( var key in arguments[i] ) {
+        if ( !(obj.hasOwnProperty(key)) ) {
+          obj[key] = arguments[i][key];
+        }
+      }
+    }
+    return obj;
   };
 
 
@@ -290,6 +320,16 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    
+    var storage = {};
+    return function() {
+    var key = Array.prototype.slice.call(arguments).join('')
+      if ( storage[key] === undefined ) {
+        storage[key] = func.apply(null, arguments);
+      }
+      return storage[key];
+
+    }; 
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -299,6 +339,12 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+
+    var arrAfter500 = Array.prototype.slice.call(arguments, 2)
+    console.log(arrAfter500)
+    setTimeout(function() {
+      return func.apply(null, arrAfter500);
+    },wait)
   };
 
 
